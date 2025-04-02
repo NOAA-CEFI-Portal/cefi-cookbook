@@ -512,6 +512,12 @@ document.write(`
 <li><p><a class="reference external" href="https://ioos.github.io/ioos_code_lab/content/code_gallery/data_access_notebooks/2017-08-01-xtractoR.html">https://ioos.github.io/ioos_code_lab/content/code_gallery/data_access_notebooks/2017-08-01-xtractoR.html</a> (use a different package called xtractomatic to access the ERDDAP data)</p></li>
 </ul>
 </div></blockquote>
+<p>On this page, we will explore the process of extracting a subset of model simualtion data produce from the regional MOM6 model. The model output is to support the Climate Ecosystem and Fishery Initiative. We will showcase how to utilize xarray and fsspec for accessing the data and visualize it on an detailed map. The currently available data can be viewed on</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://noaa-oar-cefi-regional-mom6-pds.s3.amazonaws.com/index.html">AWS</a></p></li>
+<li><p><a class="reference external" href="https://console.cloud.google.com/storage/browser/noaa-oar-cefi-regional-mom6">Google Cloud Storage</a></p></li>
+</ul>
+<p>The contents of this folder encompass hindcast simulations derived from the regional MOM6 model spanning the years 1993 to 2019.</p>
 <div class="admonition alert alert-info">
     <p class="admonition-title" style="font-weight:bold">Launch R in Jupyterlab</p>
     In addition to the standard R code demonstrated below, our current interface leverages JupyterLab to execute R code using the R kernel. To enable this functionality, we utilize the environment.yml file to create a Conda/Mamba environment. The primary objective is to install the r-irkernel package within this environment.
@@ -580,7 +586,7 @@ We’re going to import them into our R environment and use them to create a pan
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fsspec</span><span class="o">$</span><span class="nf">filesystem</span><span class="p">(</span><span class="s">&#39;reference&#39;</span><span class="p">,</span><span class="w"> </span>
 <span class="w">    </span><span class="n">remote_protocol</span><span class="o">=</span><span class="s">&#39;gcs&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="n">fo</span><span class="o">=</span><span class="s">&#39;gcs://noaa-oar-cefi-regional-mom6-nwa/northwest_atlantic/full_domain/hindcast/monthly/regrid/r20230520/tos.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.json&#39;</span>
+<span class="w">    </span><span class="n">fo</span><span class="o">=</span><span class="s">&#39;gcs://noaa-oar-cefi-regional-mom6/northwest_atlantic/full_domain/hindcast/monthly/regrid/r20230520/tos.nwa.full.hcast.monthly.regrid.r20230520.199301-201912.json&#39;</span>
 <span class="p">)</span>
 <span class="n">m</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fs</span><span class="o">$</span><span class="nf">get_mapper</span><span class="p">()</span>
 <span class="n">dataset</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">xr</span><span class="o">$</span><span class="nf">open_dataset</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">engine</span><span class="o">=</span><span class="s">&#39;zarr&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">consolidated</span><span class="o">=</span><span class="kc">FALSE</span><span class="p">)</span>
@@ -769,7 +775,7 @@ We’ll get both the data and the grid from the cloud storage just as we did in 
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">anon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
 <span class="n">fs</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fsspec</span><span class="o">$</span><span class="nf">filesystem</span><span class="p">(</span><span class="s">&#39;reference&#39;</span><span class="p">,</span><span class="w"> </span>
 <span class="w">    </span><span class="n">remote_protocol</span><span class="o">=</span><span class="s">&#39;s3&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="n">fo</span><span class="o">=</span><span class="s">&#39;s3://noaa-oar-cefi-regional-mom6-nwa-pds/northwest_atlantic/full_domain/hindcast/monthly/raw/r20230520/sos.nwa.full.hcast.monthly.raw.r20230520.199301-201912.json&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">fo</span><span class="o">=</span><span class="s">&#39;s3://noaa-oar-cefi-regional-mom6-pds/northwest_atlantic/full_domain/hindcast/monthly/raw/r20230520/sos.nwa.full.hcast.monthly.raw.r20230520.199301-201912.json&#39;</span><span class="p">,</span>
 <span class="w">    </span><span class="n">remote_options</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
 <span class="w">    </span><span class="n">target_options</span><span class="o">=</span><span class="n">params</span>
 <span class="p">)</span>
@@ -777,7 +783,7 @@ We’ll get both the data and the grid from the cloud storage just as we did in 
 <span class="n">dataset</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">xr</span><span class="o">$</span><span class="nf">open_dataset</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">engine</span><span class="o">=</span><span class="s">&#39;zarr&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">consolidated</span><span class="o">=</span><span class="kc">FALSE</span><span class="p">)</span>
 <span class="n">fsg</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fsspec</span><span class="o">$</span><span class="nf">filesystem</span><span class="p">(</span><span class="s">&#39;reference&#39;</span><span class="p">,</span><span class="w"> </span>
 <span class="w">    </span><span class="n">remote_protocol</span><span class="o">=</span><span class="s">&#39;s3&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="n">fo</span><span class="o">=</span><span class="s">&#39;s3://noaa-oar-cefi-regional-mom6-nwa-pds/northwest_atlantic/full_domain/hindcast/monthly/raw/r20230520/ocean_static.json&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">fo</span><span class="o">=</span><span class="s">&#39;s3://noaa-oar-cefi-regional-mom6-pds/northwest_atlantic/full_domain/hindcast/monthly/raw/r20230520/ocean_static.json&#39;</span><span class="p">,</span>
 <span class="w">    </span><span class="n">remote_options</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
 <span class="w">    </span><span class="n">target_options</span><span class="o">=</span><span class="n">params</span>
 <span class="p">)</span>
