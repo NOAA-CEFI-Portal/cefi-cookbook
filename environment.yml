@@ -19,6 +19,7 @@ dependencies:
   - cf_xarray
   - cartopy
   - zarr
+  - kerchunk
   - fsspec
   - gcsfs
   - s3fs
